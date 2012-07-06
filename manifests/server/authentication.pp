@@ -1,4 +1,5 @@
 class mysql::server::authentication (
+  $mysql_root_user,
   $mysql_root_password,
 ) {
   exec { 'set_mysql_rootpw':

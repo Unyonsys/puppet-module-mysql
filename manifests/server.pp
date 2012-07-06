@@ -27,6 +27,7 @@ class mysql::server (
   class { "${module_name}::server::service": }
 
   class { "${module_name}::server::authentication":
+    mysql_root_user     => $mysql::server::mysql_root_user,
     mysql_root_password => $mysql::server::mysql_root_password,
   }
 

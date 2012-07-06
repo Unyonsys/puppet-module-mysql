@@ -4,6 +4,8 @@ class mysql::cluster (
   $wsrep_sst_auth,
   $wsrep_cluster_name,
   $wsrep_cluster_address,
+  $status_password,
+  $status_user          = 'clusterstatus',
   $wsrep_sst_method     = 'mysqldump',
   $wsrep_slave_threads  = $mysql::variables::slave_threads,
   $mysql_root_user      = 'root',
@@ -11,6 +13,7 @@ class mysql::cluster (
 ) inherits mysql::variables {
   Class[ "${module_name}::server::authentication" ] -> Class[ "${module_name}::cluster::authentication" ] -> Class[ "${module_name}::cluster::config" ]
   Class[ "${module_name}::cluster::config" ] ~> Class[ "${module_name}::server::service" ]
+  Class[ "${module_name}::cluster::status" ] ~> Class[ 'xinetd' ]
 
   $collection_tag_real = $collection_tag ? {
     undef   => $wsrep_cluster_name,
@@ -30,7 +33,12 @@ class mysql::cluster (
   class { "${module_name}::cluster::config":
     wsrep_cluster_name    => $mysql::cluster::wsrep_cluster_name,
     wsrep_cluster_address => $mysql::cluster::wsrep_cluster_address,
+    wsrep_sst_auth        => $mysql::cluster::wsrep_sst_auth,
     wsrep_sst_method      => $mysql::cluster::wsrep_sst_method,
     wsrep_slave_threads   => $mysql::cluster::wsrep_slave_threads,
+  }
+  class { "${module_name}::cluster::status":
+    status_user     => $mysql::cluster::status_user,
+    status_password => $mysql::cluster::status_password,
   }
 }

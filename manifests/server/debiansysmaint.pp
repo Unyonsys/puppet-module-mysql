@@ -1,5 +1,5 @@
 class mysql::server::debiansysmaint (
-  debiansysmaint_password,
+  $debiansysmaint_password,
 ) {
   file { "${mysql::variables::mysql_root}":
     ensure => directory,
