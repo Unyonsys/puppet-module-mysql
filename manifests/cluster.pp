@@ -11,33 +11,35 @@ class mysql::cluster (
   $mysql_root_user      = 'root',
   $collection_tag       = undef,
 ) inherits mysql::variables {
-  Class[ "${module_name}::server::authentication" ] -> Class[ "${module_name}::cluster::authentication" ] -> Class[ "${module_name}::cluster::config" ]
-  Class[ "${module_name}::cluster::config" ] ~> Class[ "${module_name}::server::service" ]
-  Class[ "${module_name}::cluster::status" ] ~> Class[ 'xinetd' ]
+  Class[ "mysql::server::authentication" ] -> Class[ "mysql::cluster::authentication" ] -> Class[ "mysql::cluster::config" ]
+  Class[ "mysql::cluster::config" ] ~> Class[ "mysql::server::service" ]
+  Class[ "mysql::cluster::status" ] ~> Class[ 'xinetd' ]
+  Package[ 'percona-xtradb-cluster-server-5.5' ] -> Class[ "mysql::cluster" ]
 
   $collection_tag_real = $collection_tag ? {
     undef   => $wsrep_cluster_name,
     default => $collection_tag,
   }
 
-  include "${module_name}::variables"
-  class { "${module_name}::server":
+  include mysql::variables
+  class { mysql::server:
     debiansysmaint_password => $mysql::cluster::debiansysmaint_password,
     mysql_root_password     => $mysql::cluster::mysql_root_password,
     mysql_root_user         => $mysql::cluster::mysql_root_user,
     collection_tag          => $collection_tag_real,
+    use_percona_pkg         => true,
   }
-  class { "${module_name}::cluster::authentication":
+  class { mysql::cluster::authentication:
     wsrep_sst_auth => $mysql::cluster::wsrep_sst_auth,
   }
-  class { "${module_name}::cluster::config":
+  class { mysql::cluster::config:
     wsrep_cluster_name    => $mysql::cluster::wsrep_cluster_name,
     wsrep_cluster_address => $mysql::cluster::wsrep_cluster_address,
     wsrep_sst_auth        => $mysql::cluster::wsrep_sst_auth,
     wsrep_sst_method      => $mysql::cluster::wsrep_sst_method,
     wsrep_slave_threads   => $mysql::cluster::wsrep_slave_threads,
   }
-  class { "${module_name}::cluster::status":
+  class { mysql::cluster::status:
     status_user     => $mysql::cluster::status_user,
     status_password => $mysql::cluster::status_password,
   }

@@ -3,6 +3,7 @@ class mysql::server (
   $mysql_root_user         = 'root',
   $debiansysmaint_password = undef,
   $collection_tag          = $::fqdn,
+  $use_percona_pkg         = false,
 ) inherits mysql::variables {
 
   Class[ "${module_name}::server::install" ] -> Class[ "${module_name}::server::config" ] ~> Class[ "${module_name}::server::service" ]
@@ -19,10 +20,12 @@ class mysql::server (
   class { "${module_name}::server::install":
     mysql_root_user     => $mysql::server::mysql_root_user,
     mysql_root_password => $mysql::server::mysql_root_password,
+    use_percona_pkg     => $mysql::server::use_percona_pkg,
   }
   class { "${module_name}::server::config":
     mysql_root_user     => $mysql::server::mysql_root_user,
     mysql_root_password => $mysql::server::mysql_root_password,
+    use_percona_pkg     => $mysql::server::use_percona_pkg,
   }
   class { "${module_name}::server::service": }
 
