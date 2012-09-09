@@ -9,6 +9,7 @@ class mysql::cluster (
   $wsrep_sst_method     = 'mysqldump',
   $wsrep_slave_threads  = $mysql::variables::slave_threads,
   $mysql_root_user      = 'root',
+  $mysql_config_options = {},
   $collection_tag       = undef,
 ) inherits mysql::variables {
   Class[ "mysql::server::authentication" ] -> Class[ "mysql::cluster::authentication" ] -> Class[ "mysql::cluster::config" ]
@@ -28,6 +29,7 @@ class mysql::cluster (
     mysql_root_user         => $mysql::cluster::mysql_root_user,
     collection_tag          => $collection_tag_real,
     use_percona_pkg         => true,
+    mysql_config_options    => $mysql::cluster::mysql_config_options,
   }
   class { mysql::cluster::authentication:
     wsrep_sst_auth => $mysql::cluster::wsrep_sst_auth,
