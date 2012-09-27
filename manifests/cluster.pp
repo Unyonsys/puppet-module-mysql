@@ -6,7 +6,7 @@ class mysql::cluster (
   $wsrep_cluster_address,
   $status_password,
   $status_user          = 'clusterstatus',
-  $wsrep_sst_method     = 'mysqldump',
+  $wsrep_sst_method     = 'rsync',
   $wsrep_slave_threads  = $mysql::variables::slave_threads,
   $mysql_root_user      = 'root',
   $mysql_config_options = {},
