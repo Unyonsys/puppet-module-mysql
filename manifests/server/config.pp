@@ -3,6 +3,7 @@ class mysql::server::config (
   $mysql_root_password,
   $use_percona_pkg,
   $mysql_config_options,
+  $log_to_syslog,
 ) {
   if ! $use_percona_pkg {
     $my_cnf = "${module_name}/my.cnf.erb"
@@ -25,5 +26,12 @@ class mysql::server::config (
   file { "${mysql::variables::mysql_root}/conf.d/options.cnf":
     ensure  => file,
     content => template( "${module_name}/options.cnf.erb" ),
+  }
+
+  if $log_to_syslog {
+    file { "${mysql::variables::mysql_root}/conf.d/log_to_syslog.cnf":
+      ensure  => file,
+      content => "[mysqld_safe]\nsyslog",
+    }
   }
 }
