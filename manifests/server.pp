@@ -5,7 +5,7 @@ class mysql::server (
   $collection_tag          = $::fqdn,
   $use_percona_pkg         = false,
   $mysql_config_options    = {},
-  log_to_syslog            = false,
+  $log_to_syslog           = false,
 ) inherits mysql::variables {
 
   Class[ "${module_name}::server::install" ] -> Class[ "${module_name}::server::config" ] ~> Class[ "${module_name}::server::service" ]
