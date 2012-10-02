@@ -4,6 +4,7 @@ class mysql::server::config (
   $use_percona_pkg,
   $mysql_config_options,
   $log_to_syslog,
+  $wsrep_urls,
 ) {
   if ! $use_percona_pkg {
     $my_cnf = "${module_name}/my.cnf.erb"

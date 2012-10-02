@@ -2,4 +2,11 @@
 # This file is managed by Puppet. DO NOT EDIT #
 ###############################################
 
+# Supposedly having wsrep_urls at the very starts
+# ensure SST occurs before InnoDB engine is initiated
+# This is only important for RSYNC method
+#
+[mysqld_safe]
+wsrep_urls=<%= wsrep_urls %>
+
 !includedir /etc/mysql/conf.d/

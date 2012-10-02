@@ -1,6 +1,5 @@
 class mysql::cluster::config (
   $wsrep_cluster_name,
-  $wsrep_cluster_address,
   $wsrep_sst_auth,
   $wsrep_sst_method,
   $wsrep_slave_threads,

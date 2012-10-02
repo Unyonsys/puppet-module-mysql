@@ -3,7 +3,7 @@ class mysql::cluster (
   $mysql_root_password,
   $wsrep_sst_auth,
   $wsrep_cluster_name,
-  $wsrep_cluster_address,
+  $wsrep_urls,
   $status_password,
   $status_user          = 'clusterstatus',
   $wsrep_sst_method     = 'rsync',
@@ -32,16 +32,16 @@ class mysql::cluster (
     use_percona_pkg         => true,
     mysql_config_options    => $mysql::cluster::mysql_config_options,
     log_to_syslog           => $mysql::cluster::log_to_syslog,
+    wsrep_urls              => $mysql::cluster::wsrep_urls,
   }
   class { mysql::cluster::authentication:
     wsrep_sst_auth => $mysql::cluster::wsrep_sst_auth,
   }
   class { mysql::cluster::config:
-    wsrep_cluster_name    => $mysql::cluster::wsrep_cluster_name,
-    wsrep_cluster_address => $mysql::cluster::wsrep_cluster_address,
-    wsrep_sst_auth        => $mysql::cluster::wsrep_sst_auth,
-    wsrep_sst_method      => $mysql::cluster::wsrep_sst_method,
-    wsrep_slave_threads   => $mysql::cluster::wsrep_slave_threads,
+    wsrep_cluster_name  => $mysql::cluster::wsrep_cluster_name,
+    wsrep_sst_auth      => $mysql::cluster::wsrep_sst_auth,
+    wsrep_sst_method    => $mysql::cluster::wsrep_sst_method,
+    wsrep_slave_threads => $mysql::cluster::wsrep_slave_threads,
   }
   class { mysql::cluster::status:
     status_user     => $mysql::cluster::status_user,
