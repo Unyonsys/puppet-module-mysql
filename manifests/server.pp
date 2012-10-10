@@ -6,7 +6,7 @@ class mysql::server (
   $use_percona_pkg         = false,
   $mysql_config_options    = {},
   $log_to_syslog           = false,
-  $wsrep_urls              = undef,
+  $wsrep_urls              = '',
 ) inherits mysql::variables {
 
   Class[ "${module_name}::server::install" ] -> Class[ "${module_name}::server::config" ] ~> Class[ "${module_name}::server::service" ]
