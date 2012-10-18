@@ -1,5 +1,5 @@
 class mysql::server::service {
-  service { $mysql::variables::mysql_service:
+  service { $mysql::variables::service:
     ensure      => running,
     enable      => true,
     hasstatus   => true,

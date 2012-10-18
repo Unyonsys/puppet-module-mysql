@@ -1,6 +1,6 @@
 class mysql::server::install (
-  $mysql_root_password,
-  $mysql_root_user,
+  $root_password,
+  $root_user,
   $use_percona_pkg,
 ) {
 
@@ -9,21 +9,21 @@ class mysql::server::install (
   }
   else {
     $packages = [ 'mysql-server' ]
-  } 
-  user { $mysql::variables::mysql_user:
-    uid  => '411',
-    gid  => $mysql::variables::mysql_group,
-    home => $mysql::variables::mysql_home,
   }
-  group { $mysql::variables::mysql_group:
+  user { $mysql::variables::user:
+    uid  => '411',
+    gid  => $mysql::variables::group,
+    home => $mysql::variables::home,
+  }
+  group { $mysql::variables::group:
     gid => '411',
   }
   package { $packages:
     ensure  => present,
-    require => User[ $mysql::variables::mysql_user ],
+    require => User[ $mysql::variables::user ],
   }
   exec { 'init_mysql_rootpw':
-    command => "mysqladmin -u root password ${mysql_root_password}",
+    command => "mysqladmin -u root password ${root_password}",
     unless  => 'test -f /root/.my.cnf',
     require => Package[ $packages ],
   }

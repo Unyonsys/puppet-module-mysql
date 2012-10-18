@@ -1,10 +1,10 @@
 class mysql::server (
-  $mysql_root_password,
-  $mysql_root_user         = 'root',
+  $root_password,
+  $root_user               = 'root',
   $debiansysmaint_password = undef,
   $collection_tag          = $::fqdn,
   $use_percona_pkg         = false,
-  $mysql_config_options    = {},
+  $config_options          = {},
   $log_to_syslog           = false,
   $wsrep_urls              = '',
 ) inherits mysql::variables {
@@ -21,23 +21,23 @@ class mysql::server (
     }
   }
   class { "${module_name}::server::install":
-    mysql_root_user     => $mysql::server::mysql_root_user,
-    mysql_root_password => $mysql::server::mysql_root_password,
-    use_percona_pkg     => $mysql::server::use_percona_pkg,
+    root_user       => $mysql::server::root_user,
+    root_password   => $mysql::server::root_password,
+    use_percona_pkg => $mysql::server::use_percona_pkg,
   }
   class { "${module_name}::server::config":
-    mysql_root_user      => $mysql::server::mysql_root_user,
-    mysql_root_password  => $mysql::server::mysql_root_password,
-    use_percona_pkg      => $mysql::server::use_percona_pkg,
-    mysql_config_options => $mysql::server::mysql_config_options,
-    log_to_syslog        => $mysql::server::log_to_syslog,
-    wsrep_urls           => $mysql::server::wsrep_urls,
+    root_user       => $mysql::server::root_user,
+    root_password   => $mysql::server::root_password,
+    use_percona_pkg => $mysql::server::use_percona_pkg,
+    config_options  => $mysql::server::config_options,
+    log_to_syslog   => $mysql::server::log_to_syslog,
+    wsrep_urls      => $mysql::server::wsrep_urls,
   }
   class { "${module_name}::server::service": }
 
   class { "${module_name}::server::authentication":
-    mysql_root_user     => $mysql::server::mysql_root_user,
-    mysql_root_password => $mysql::server::mysql_root_password,
+    root_user     => $mysql::server::root_user,
+    root_password => $mysql::server::root_password,
   }
 
   Database       <<| tag == $collection_tag |>> { require => Class[ "${module_name}::server::service" ] }

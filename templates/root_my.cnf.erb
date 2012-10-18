@@ -3,13 +3,17 @@
 ###############################################
 
 [mysqldump]
-user = <%= mysql_root_user %>
-password = <%= mysql_root_password %>
+user = <%= root_user %>
+password = <%= root_password %>
 
 [mysql]
-user = <%= mysql_root_user %>
-password = <%= mysql_root_password %>
+user = <%= root_user %>
+password = <%= root_password %>
 
 [mysqladmin]
-user = <%= mysql_root_user %>
-password = <%= mysql_root_password %>
+user = <%= root_user %>
+password = <%= root_password %>
+
+[client]
+user = <%= root_user %>
+password = <%= root_password %>

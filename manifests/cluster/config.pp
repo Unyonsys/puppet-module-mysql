@@ -4,7 +4,7 @@ class mysql::cluster::config (
   $wsrep_sst_method,
   $wsrep_slave_threads,
 ) {
-  file { "${mysql::variables::mysql_root}/conf.d/galera_replication.cnf":
+  file { "${mysql::variables::conf_folder}/conf.d/galera_replication.cnf":
     ensure  => file,
     content => template( "${module_name}/galera_replication.cnf.erb" ),
   }

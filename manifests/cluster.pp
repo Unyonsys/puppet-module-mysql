@@ -1,6 +1,6 @@
 class mysql::cluster (
   $debiansysmaint_password,
-  $mysql_root_password,
+  $root_password,
   $wsrep_sst_auth,
   $wsrep_cluster_name,
   $wsrep_urls,
@@ -8,8 +8,8 @@ class mysql::cluster (
   $status_user          = 'clusterstatus',
   $wsrep_sst_method     = 'rsync',
   $wsrep_slave_threads  = $mysql::variables::slave_threads,
-  $mysql_root_user      = 'root',
-  $mysql_config_options = {},
+  $root_user            = 'root',
+  $config_options       = {},
   $log_to_syslog        = false,
   $collection_tag       = undef,
 ) inherits mysql::variables {
@@ -26,11 +26,11 @@ class mysql::cluster (
   include mysql::variables
   class { mysql::server:
     debiansysmaint_password => $mysql::cluster::debiansysmaint_password,
-    mysql_root_password     => $mysql::cluster::mysql_root_password,
-    mysql_root_user         => $mysql::cluster::mysql_root_user,
+    root_password           => $mysql::cluster::root_password,
+    root_user               => $mysql::cluster::root_user,
     collection_tag          => $collection_tag_real,
     use_percona_pkg         => true,
-    mysql_config_options    => $mysql::cluster::mysql_config_options,
+    config_options          => $mysql::cluster::config_options,
     log_to_syslog           => $mysql::cluster::log_to_syslog,
     wsrep_urls              => $mysql::cluster::wsrep_urls,
   }

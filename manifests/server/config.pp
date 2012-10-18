@@ -1,8 +1,8 @@
 class mysql::server::config (
-  $mysql_root_user,
-  $mysql_root_password,
+  $root_user,
+  $root_password,
   $use_percona_pkg,
-  $mysql_config_options,
+  $config_options,
   $log_to_syslog,
   $wsrep_urls,
 ) {
@@ -19,18 +19,18 @@ class mysql::server::config (
   else {
     $lc_messages_dir = false
   }
-  file { "${mysql::variables::mysql_root}/my.cnf":
+  file { "${mysql::variables::conf_folder}/my.cnf":
     ensure  => file,
     content => template( $my_cnf ),
   }
 
-  file { "${mysql::variables::mysql_root}/conf.d/options.cnf":
+  file { "${mysql::variables::conf_folder}/conf.d/options.cnf":
     ensure  => file,
     content => template( "${module_name}/options.cnf.erb" ),
   }
 
   if $log_to_syslog {
-    file { "${mysql::variables::mysql_root}/conf.d/log_to_syslog.cnf":
+    file { "${mysql::variables::conf_folder}/conf.d/log_to_syslog.cnf":
       ensure  => file,
       content => "[mysqld_safe]\nsyslog",
     }
