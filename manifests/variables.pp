@@ -8,6 +8,12 @@ class mysql::variables {
       $home          = '/var/lib/mysql'
       $service       = 'mysql'
       $slave_threads = $::processorcount * 2
+      if versioncmp( $::operatingsystemrelease, '11.10') > 0 {
+        $percona_toolkit = 'percona-toolkit'
+      }
+      else {
+        $percona_toolkit = 'maatkit'
+      }
     }
     default : {
       fail('Unsupported operating system')
