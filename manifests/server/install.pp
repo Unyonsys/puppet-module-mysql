@@ -6,6 +6,12 @@ class mysql::server::install (
 
   if $use_percona_pkg {
     $packages = [ 'percona-xtradb-cluster-server-5.5', $::mysql::variables::percona_toolkit ]
+    file { '/usr/bin/wsrep_sst_common':
+      ensure => file,
+      mode   => '0755',
+      source => 'puppet:///modules/mysql/wsrep_sst_common',
+      before => Package[ $packages ],
+    }
   }
   else {
     $packages = [ 'mysql-server', $::mysql::variables::percona_toolkit ]
