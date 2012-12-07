@@ -5,10 +5,10 @@ class mysql::server::install (
 ) {
 
   if $use_percona_pkg {
-    $packages = [ 'percona-xtradb-cluster-server-5.5', 'percona-xtrabackup' ]
+    $packages = [ 'percona-xtradb-cluster-server-5.5', $::mysql::variables::percona_toolkit ]
   }
   else {
-    $packages = [ 'mysql-server' ]
+    $packages = [ 'mysql-server', $::mysql::variables::percona_toolkit ]
   }
   user { $mysql::variables::user:
     uid  => '411',
