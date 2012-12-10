@@ -10,6 +10,7 @@ class mysql::cluster (
   $wsrep_slave_threads  = $mysql::variables::slave_threads,
   $root_user            = 'root',
   $config_options       = {},
+  $pkg_ensure           = 'present',
   $log_to_syslog        = false,
   $collection_tag       = undef,
 ) inherits mysql::variables {
@@ -30,6 +31,7 @@ class mysql::cluster (
     root_user               => $mysql::cluster::root_user,
     collection_tag          => $collection_tag_real,
     use_percona_pkg         => true,
+    pkg_ensure              => $mysql::cluster::pkg_ensure,
     config_options          => $mysql::cluster::config_options,
     log_to_syslog           => $mysql::cluster::log_to_syslog,
     wsrep_urls              => $mysql::cluster::wsrep_urls,
