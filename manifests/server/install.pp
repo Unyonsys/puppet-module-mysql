@@ -2,6 +2,7 @@ class mysql::server::install (
   $root_password,
   $root_user,
   $use_percona_pkg,
+  $pkg_ensure,
 ) {
 
   if $use_percona_pkg {
@@ -25,7 +26,7 @@ class mysql::server::install (
     gid => '411',
   }
   package { $packages:
-    ensure  => present,
+    ensure  => $pkg_ensure,
     require => User[ $mysql::variables::user ],
   }
   exec { 'init_mysql_rootpw':

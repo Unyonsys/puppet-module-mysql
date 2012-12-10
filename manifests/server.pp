@@ -4,6 +4,7 @@ class mysql::server (
   $debiansysmaint_password = undef,
   $collection_tag          = $::fqdn,
   $use_percona_pkg         = false,
+  $pkg_ensure              = 'present',
   $config_options          = {},
   $log_to_syslog           = false,
   $wsrep_urls              = '',
@@ -24,6 +25,7 @@ class mysql::server (
     root_user       => $mysql::server::root_user,
     root_password   => $mysql::server::root_password,
     use_percona_pkg => $mysql::server::use_percona_pkg,
+    pkg_ensure      => $mysql::server::pkg_ensure,
   }
   class { "${module_name}::server::config":
     root_user       => $mysql::server::root_user,
