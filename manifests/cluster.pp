@@ -14,8 +14,9 @@ class mysql::cluster (
   $log_to_syslog        = false,
   $collection_tag       = undef,
 ) inherits mysql::variables {
-  Class[ "mysql::server::authentication" ] -> Class[ "mysql::cluster::authentication" ] -> Class[ "mysql::cluster::config" ]
+  Class[ "mysql::server::authentication" ] -> Class[ "mysql::cluster::authentication" ]
   Class[ "mysql::cluster::config" ] ~> Class[ "mysql::server::service" ]
+  Class[ "mysql::server::service" ] -> Class[ "mysql::server::authentication" ]
   Class[ "mysql::cluster::status" ] ~> Class[ 'xinetd' ]
   Package[ 'percona-xtradb-cluster-server-5.5' ] -> Class[ "mysql::cluster" ]
 
@@ -35,6 +36,8 @@ class mysql::cluster (
     config_options          => $mysql::cluster::config_options,
     log_to_syslog           => $mysql::cluster::log_to_syslog,
     wsrep_urls              => $mysql::cluster::wsrep_urls,
+    svc_hasstatus           => false,
+    svc_pattern             => 'mysqld',
   }
   class { mysql::cluster::authentication:
     wsrep_sst_auth => $mysql::cluster::wsrep_sst_auth,
