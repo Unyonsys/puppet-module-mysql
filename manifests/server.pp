@@ -8,6 +8,8 @@ class mysql::server (
   $config_options          = {},
   $log_to_syslog           = false,
   $wsrep_urls              = '',
+  $svc_hasstatus           = $mysql::variables::svc_hasstatus,
+  $svc_pattern             = $mysql::variables::svc_pattern,
 ) inherits mysql::variables {
 
   Class[ "${module_name}::server::install" ] -> Class[ "${module_name}::server::config" ] ~> Class[ "${module_name}::server::service" ]
@@ -35,7 +37,10 @@ class mysql::server (
     log_to_syslog   => $mysql::server::log_to_syslog,
     wsrep_urls      => $mysql::server::wsrep_urls,
   }
-  class { "${module_name}::server::service": }
+  class { "${module_name}::server::service":
+    svc_hasstatus => $mysql::server::svc_hasstatus,
+    svc_pattern   => $mysql::server::svc_pattern,
+  }
 
   class { "${module_name}::server::authentication":
     root_user     => $mysql::server::root_user,
