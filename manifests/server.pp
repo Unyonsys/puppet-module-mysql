@@ -12,9 +12,11 @@ class mysql::server (
   $svc_pattern             = $mysql::variables::svc_pattern,
 ) inherits mysql::variables {
 
-  Class[ "${module_name}::server::install" ] -> Class[ "${module_name}::server::config" ] ~> Class[ "${module_name}::server::service" ]
-  Class[ "${module_name}::server::install" ] -> Class[ "${module_name}::server::authentication" ]
   Class[ "${module_name}::client::install" ] -> Class[ "${module_name}::server::install" ]
+  Class[ "${module_name}::server::user" ]    -> Class[ "${module_name}::server::install" ]
+  Class[ "${module_name}::server::install" ] -> Class[ "${module_name}::server::config" ]
+  Class[ "${module_name}::server::install" ] -> Class[ "${module_name}::server::authentication" ]
+  Class[ "${module_name}::server::config" ] ~> Class[ "${module_name}::server::service" ]
 
   include "${module_name}::variables"
   if $debiansysmaint_password {
@@ -23,6 +25,7 @@ class mysql::server (
       debiansysmaint_password => $mysql::server::debiansysmaint_password,
     }
   }
+  class { "${module_name}::server::user": }
   class { "${module_name}::server::install":
     root_user       => $mysql::server::root_user,
     root_password   => $mysql::server::root_password,
