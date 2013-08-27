@@ -1,0 +1,19 @@
+# File Managed by puppet
+# MySQL Replication Settings
+# Let's assume we have N MySQL nodes, then auto_increment_increment has the value N on all nodes
+# and each node must have a different value for auto_increment_offset (1, 2, ..., N).
+
+[mysqld]
+server-id                   = <%= server_id %>
+auto-increment-offset       = <%= auto_increment_offset %>
+auto-increment-increment    = <%= auto_increment_increment %>
+
+log-bin                     = mysql-binlog
+max-binlog-size             = 100M
+expire_logs_days            = 10
+
+relay-log                   = mysql-relaylog
+relay-log-index             = mysql-relaylog.index
+relay-log-info-file         = mysql-relaylog.info
+max-relay-log-size          = 100M
+relay-log-space-limit       = 1G
