@@ -3,8 +3,9 @@ class mysql::server (
   $root_user               = 'root',
   $debiansysmaint_password = undef,
   $collection_tag          = $::fqdn,
-  $use_percona_pkg         = false,
+  $pkg                     = 'mysql-server', 
   $pkg_ensure              = 'present',
+  $template                = 'my.cnf.erb',
   $config_options          = {},
   $log_to_syslog           = false,
   $wsrep_urls              = '',
@@ -12,7 +13,6 @@ class mysql::server (
   $svc_pattern             = $mysql::variables::svc_pattern,
 ) inherits mysql::variables {
 
-  Class[ "${module_name}::client::install" ] -> Class[ "${module_name}::server::install" ]
   Class[ "${module_name}::server::user" ]    -> Class[ "${module_name}::server::install" ]
   Class[ "${module_name}::server::install" ] -> Class[ "${module_name}::server::config" ]
   Class[ "${module_name}::server::install" ] -> Class[ "${module_name}::server::authentication" ]
@@ -29,16 +29,16 @@ class mysql::server (
   class { "${module_name}::server::install":
     root_user       => $mysql::server::root_user,
     root_password   => $mysql::server::root_password,
-    use_percona_pkg => $mysql::server::use_percona_pkg,
+    pkg             => $mysql::server::pkg,
     pkg_ensure      => $mysql::server::pkg_ensure,
   }
   class { "${module_name}::server::config":
-    root_user       => $mysql::server::root_user,
-    root_password   => $mysql::server::root_password,
-    use_percona_pkg => $mysql::server::use_percona_pkg,
-    config_options  => $mysql::server::config_options,
-    log_to_syslog   => $mysql::server::log_to_syslog,
-    wsrep_urls      => $mysql::server::wsrep_urls,
+    root_user      => $mysql::server::root_user,
+    root_password  => $mysql::server::root_password,
+    template       => $mysql::server::template,
+    config_options => $mysql::server::config_options,
+    log_to_syslog  => $mysql::server::log_to_syslog,
+    wsrep_urls     => $mysql::server::wsrep_urls,
   }
   class { "${module_name}::server::service":
     svc_hasstatus => $mysql::server::svc_hasstatus,

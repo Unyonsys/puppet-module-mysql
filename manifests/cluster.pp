@@ -5,14 +5,16 @@ class mysql::cluster (
   $wsrep_cluster_name,
   $wsrep_urls,
   $status_password,
-  $status_user          = 'clusterstatus',
-  $wsrep_sst_method     = 'rsync',
-  $wsrep_slave_threads  = $mysql::variables::slave_threads,
-  $root_user            = 'root',
-  $config_options       = {},
-  $pkg_ensure           = 'present',
-  $log_to_syslog        = false,
-  $collection_tag       = undef,
+  $status_user         = 'clusterstatus',
+  $wsrep_sst_method    = 'rsync',
+  $wsrep_slave_threads = $mysql::variables::slave_threads,
+  $root_user           = 'root',
+  $config_options      = {},
+  $pkg                 = 'percona-xtradb-cluster-server-5.5',
+  $pkg_ensure          = 'present',
+  $template            = 'my.cnf_cluster.erb',
+  $log_to_syslog       = false,
+  $collection_tag      = undef,
 ) inherits mysql::variables {
   Class[ "mysql::server::authentication" ] -> Class[ "mysql::cluster::authentication" ]
   Class[ "mysql::cluster::config" ] ~> Class[ "mysql::server::service" ]
@@ -31,8 +33,9 @@ class mysql::cluster (
     root_password           => $mysql::cluster::root_password,
     root_user               => $mysql::cluster::root_user,
     collection_tag          => $collection_tag_real,
-    use_percona_pkg         => true,
+    pkg                     => $mysql::cluster::pkg,
     pkg_ensure              => $mysql::cluster::pkg_ensure,
+    template                => $mysql::cluster::template,
     config_options          => $mysql::cluster::config_options,
     log_to_syslog           => $mysql::cluster::log_to_syslog,
     wsrep_urls              => $mysql::cluster::wsrep_urls,
@@ -51,5 +54,11 @@ class mysql::cluster (
   class { mysql::cluster::status:
     status_user     => $mysql::cluster::status_user,
     status_password => $mysql::cluster::status_password,
+  }
+  file { '/usr/bin/wsrep_sst_common':
+    ensure => file,
+    mode   => '0755',
+    source => 'puppet:///modules/mysql/wsrep_sst_common',
+    before => Package[ $mysql::cluster::pkg ],
   }
 }

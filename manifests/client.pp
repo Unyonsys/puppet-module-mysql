@@ -1,8 +1,8 @@
 class mysql::client (
-  $use_percona_pkg = false,
+  $pkg = 'mysql-client',
 ) {
   include "${module_name}::variables"
   class { "${module_name}::client::install":
-    use_percona_pkg => $mysql::client::use_percona_pkg,
+    pkg => $mysql::client::pkg,
   }
 }

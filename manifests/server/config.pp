@@ -1,17 +1,12 @@
 class mysql::server::config (
   $root_user,
   $root_password,
-  $use_percona_pkg,
+  $template,
   $config_options,
   $log_to_syslog,
   $wsrep_urls,
 ) {
-  if ! $use_percona_pkg {
-    $my_cnf = "${module_name}/my.cnf.erb"
-  }
-  else {
-    $my_cnf = "${module_name}/my.cnf_percona.erb"
-  }
+
 
   if versioncmp($::operatingsystemrelease, '11.10') > 0 {
     $lc_messages_dir = true
@@ -19,6 +14,7 @@ class mysql::server::config (
   else {
     $lc_messages_dir = false
   }
+  $my_cnf = "${module_name}/${template}"
   file { "${mysql::variables::conf_folder}/my.cnf":
     ensure  => file,
     content => template( $my_cnf ),
