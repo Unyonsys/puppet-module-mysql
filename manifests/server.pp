@@ -3,7 +3,7 @@ class mysql::server (
   $root_user               = 'root',
   $debiansysmaint_password = undef,
   $collection_tag          = $::fqdn,
-  $pkg                     = 'mysql-server', 
+  $pkg                     = 'mysql-server',
   $pkg_ensure              = 'present',
   $template                = 'my.cnf.erb',
   $config_options          = {},
@@ -12,6 +12,10 @@ class mysql::server (
   $svc_hasstatus           = $mysql::variables::svc_hasstatus,
   $svc_pattern             = $mysql::variables::svc_pattern,
 ) inherits mysql::variables {
+
+  anchor { "${module_name}::begin": } -> Class["${module_name}::server::user"]
+  Class["${module_name}::server::service"] -> anchor { "${module_name}::end": }
+
 
   Class[ "${module_name}::server::user" ]    -> Class[ "${module_name}::server::install" ]
   Class[ "${module_name}::server::install" ] -> Class[ "${module_name}::server::config" ]
