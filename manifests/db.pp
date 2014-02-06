@@ -54,11 +54,13 @@ define mysql::db (
     require  => Class['mysql::server::authentication'],
   }
 
-  database_user { "${user}@${host}":
-    ensure        => $ensure,
-    password_hash => mysql_password($password),
-    provider      => 'mysql',
-    require       => Database[$name],
+  if ! defined(Database_user["${user}@${host}"]) {
+    database_user { "${user}@${host}":
+      ensure        => $ensure,
+      password_hash => mysql_password($password),
+      provider      => 'mysql',
+      require       => Database[$name],
+    }
   }
 
   if $ensure == 'present' {
