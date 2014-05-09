@@ -20,7 +20,7 @@ class mysql::server::config (
     content => template( $my_cnf ),
   }
 
-  file { "${mysql::variables::conf_folder}/conf.d/options.cnf":
+  file { "${mysql::variables::conf_folder}/conf.d/zz_options.cnf":
     ensure  => file,
     content => template( "${module_name}/options.cnf.erb" ),
   }
