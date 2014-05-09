@@ -50,4 +50,7 @@ class mysql::replica (
     auto_increment_offset    => $mysql::replica::auto_increment_offset,
     auto_increment_increment => $mysql::replica::auto_increment_increment,
   }
+  contain mysql::server
+  contain mysql::replica::authentication
+  contain mysql::replica::config
 }
